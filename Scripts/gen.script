@@ -1,0 +1,808 @@
+#!/bin/bash
+
+NPP=-1          #use -1 for no mpi
+
+CRE_RLX=0
+CRE_SCF=0
+CRE_BAND_NSCF=0
+CRE_BAND=0
+CRE_DOS_NSCF=0
+CRE_DOS=0
+CRE_PROJWFC=0
+CRE_PP_SCF=0
+CRE_PP=0
+CRE_VB_CB=1
+
+PREFIX="#VALUE"
+D_PREF="#VALUE"
+
+D_INN="/home/nano3/Desktop/LST/$D_PREF"
+D_PSEUDO="/home/nano3/Desktop/Pseudo/"
+D_QEE="/home/nano3/Desktop/qe-6.5/bin"
+
+if [ ! -d "$PWD/$D_PREF" ]; then
+    mkdir $PWD/$D_PREF
+    mkdir $PWD/$D_PREF/OUT
+fi
+
+A=          #VALUE
+C=          #VALUE
+NAT=        #VALUE
+NTYP=       #VALUE
+ECUTW=      #VALUE
+ECUTRHO=    #VALUE
+
+
+ATOM_SPE="\
+#VALUE
+"
+ATOM_POS="\
+#VALUE
+"
+COORDINATE_TYPE="angstrom"       #angstrom or crystal
+
+K_SCF="#VALUE"
+K_BANDS="\
+
+"
+K_DOS="#VALUE"
+NGAUSS=#VALUE           #PDOS
+
+#FOR CHARGE DENSITY CALCULATIONS ONLY
+
+PP_A=#VALUE
+
+NAT_h=#VALUE
+NTYP_h=#VALUE
+
+ATOM_POS_heter="\
+#VALUE
+"
+ATOM_SPE_heter="\
+#VALUE
+"
+
+
+PREFIX_1=#VALUE
+NAT_1=#VALUE
+NTYP_1=#VALUE
+ATOM_SPE_1="\
+#VALUE
+"
+ATOM_POS_1="\
+#VALUE
+"
+
+PREFIX_2=#VALUE
+NAT_2=#VALUE
+NTYP_2=#VALUE
+ATOM_SPE_2="\
+#VALUE
+"
+ATOM_POS_2="\
+#VALUE
+"
+
+KBAND_VB=#VALUE
+KBAND_CB=#VALUE
+
+##################################--STARTING--#########################################
+#Script file creation
+touch $PWD/$D_PREF/$PREFIX.script
+cat > $PWD/$D_PREF/$PREFIX.script << EOF
+#!/bin/sh
+F_PREFIX=$PREFIX
+F_PREFIX_1=$PREFIX_1
+F_PREFIX_2=$PREFIX_2
+D_IN="$D_INN"
+D_OUT="$D_INN/OUT"
+D_QE="$D_QEE"
+NP="$NPP"
+
+if [ ! -d "\$D_OUT" ]; then
+    mkdir \$D_OUT
+fi
+
+echo "Started Simulation";
+date
+EOF
+
+#SCF file creation
+if [ $CRE_SCF == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.scf.in
+cat > $PWD/$D_PREF/$PREFIX.scf.in <<EOF
+&CONTROL
+    calculation   = "scf"
+    outdir        = "$D_INN/work/"
+    prefix        = "$PREFIX"
+    pseudo_dir    = "$D_PSEUDO"
+    restart_mode  = "from_scratch"
+    verbosity     = 'high'
+/
+
+&SYSTEM
+    ibrav       =  4
+    a           =  $A
+    c           =  $C
+    nat         =  $NAT
+    ntyp        =  $NTYP
+    input_dft   = 'PBE'
+    ecutwfc     =  $ECUTW
+    ecutrho     =  $ECUTRHO
+    occupations = 'smearing'
+    smearing    = 'mp'
+    degauss     =  0.005
+    vdw_corr	= 'DFT-D'
+/
+
+&ELECTRONS
+    conv_thr         =  1.00000e-8
+    mixing_beta      =  0.7
+/
+
+ATOMIC_SPECIES
+$ATOM_SPE
+ATOMIC_POSITIONS (angstrom)
+$ATOM_POS
+K_POINTS {automatic}
+$K_SCF
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pw.x -i \$D_IN/\$F_PREFIX.scf.in > \$D_OUT/\$F_PREFIX.scf.out;
+echo "SCF Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.scf.in > \$D_OUT/\$F_PREFIX.scf.out;
+echo "SCF Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#Band_nscf file creation
+if [ $CRE_BAND_NSCF == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.band_nscf.in
+cat > $PWD/$D_PREF/$PREFIX.band_nscf.in <<EOF
+&CONTROL
+    calculation   = "bands"
+    outdir        = "$D_INN/work/"
+    prefix        = "$PREFIX"
+    pseudo_dir    = "$D_PSEUDO"
+    restart_mode  = "from_scratch"
+    verbosity     = "high"
+/
+
+&SYSTEM
+    ibrav       =  4
+    a           =  $A
+    c           =  $C
+    nat         =  $NAT
+    ntyp        =  $NTYP
+    input_dft   = 'PBE'
+    ecutwfc     =  $ECUTW
+    ecutrho     =  $ECUTRHO
+    occupations = 'smearing'
+    smearing    = 'mp'
+    degauss     =  0.005
+    vdw_corr	= 'DFT-D'
+/
+
+&ELECTRONS
+    conv_thr         =  1.00000e-8
+    mixing_beta      =  0.7
+/
+
+ATOMIC_SPECIES
+$ATOM_SPE
+ATOMIC_POSITIONS (angstrom)
+$ATOM_POS
+K_POINTS crystal_b
+$K_BANDS
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pw.x -i \$D_IN/\$F_PREFIX.band_nscf.in > \$D_OUT/\$F_PREFIX.band_nscf.out;
+echo "BAND_NSCF Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.band_nscf.in > \$D_OUT/\$F_PREFIX.band_nscf.out;
+echo "BAND_NSCF Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#Band file creation
+if [ $CRE_BAND == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.band.in
+cat > $PWD/$D_PREF/$PREFIX.band.in <<EOF
+&BANDS
+    outdir	= "$D_INN/work/",
+    prefix	= "$PREFIX",
+    filband	= "$D_INN/OUT/$PREFIX.band",
+    lsym	= .true.
+/
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/bands.x -i \$D_IN/\$F_PREFIX.band.in > \$D_OUT/\$F_PREFIX.band.out;
+echo "BAND Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/bands.x -i \$D_IN/\$F_PREFIX.band.in > \$D_OUT/\$F_PREFIX.band.out;
+echo "BAND Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#DOS_nscf file creation
+if [ $CRE_DOS_NSCF == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.dos_nscf.in
+cat > $PWD/$D_PREF/$PREFIX.dos_nscf.in <<EOF
+&CONTROL
+    calculation   = "nscf"
+    outdir        = "$D_INN/work/"
+    prefix        = "$PREFIX"
+    pseudo_dir    = "$D_PSEUDO"
+    restart_mode  = "from_scratch"
+    verbosity     = "high"
+/
+
+&SYSTEM
+    ibrav       =  4
+    a           =  $A
+    c           =  $C
+    nat         =  $NAT
+    ntyp        =  $NTYP
+    input_dft   = 'PBE'
+    ecutwfc     =  $ECUTW
+    ecutrho     =  $ECUTRHO
+    occupations = 'tetrahedra'
+    vdw_corr	= 'DFT-D'
+/
+
+&ELECTRONS
+    conv_thr         =  1.00000e-8
+    mixing_beta      =  0.7
+/
+
+ATOMIC_SPECIES
+$ATOM_SPE
+ATOMIC_POSITIONS (angstrom)
+$ATOM_POS
+K_POINTS {automatic}
+$K_DOS
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pw.x -i \$D_IN/\$F_PREFIX.dos_nscf.in > \$D_OUT/\$F_PREFIX.dos_nscf.out;
+echo "DOS_NSCF Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.dos_nscf.in > \$D_OUT/\$F_PREFIX.dos_nscf.out;
+echo "DOS_NSCF Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#DOS file creation
+if [ $CRE_DOS == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.dos.in
+cat > $PWD/$D_PREF/$PREFIX.dos.in <<EOF
+&DOS
+    outdir = "$D_INN/work/"
+    prefix = "$PREFIX"
+    fildos = "$D_INN/OUT/$PREFIX.dos"
+/
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/dos.x -i \$D_IN/\$F_PREFIX.dos.in > \$D_OUT/\$F_PREFIX.dos.out;
+echo "DOS Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/dos.x -i \$D_IN/\$F_PREFIX.dos.in > \$D_OUT/\$F_PREFIX.dos.out;
+echo "DOS Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#PROJWFC file creation
+if [ $CRE_PROJWFC == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.projwfc.in
+cat > $PWD/$D_PREF/$PREFIX.projwfc.in <<EOF
+&PROJWFC
+    outdir = "$D_INN/work/"
+    prefix = "$PREFIX"
+    ngauss = $NGAUSS
+    filpdos = "$D_INN/OUT/$PREFIX"
+/
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/projwfc.x -i \$D_IN/\$F_PREFIX.projwfc.in > \$D_OUT/\$F_PREFIX.projwfc.out;
+echo "PDOS Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/projwfc.x -i \$D_IN/\$F_PREFIX.projwfc.in > \$D_OUT/\$F_PREFIX.projwfc.out;
+echo "PDOS Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#PP_scf file creation
+
+if [[ $CRE_PP_SCF == 1 || $CRE_VB_CB == 1 ]];then
+touch $PWD/$D_PREF/$PREFIX.pp_scf.in
+cat > $PWD/$D_PREF/$PREFIX.pp_scf.in <<EOF
+&CONTROL
+    calculation   = "scf"
+    outdir        = "$D_INN/work/"
+    prefix        = "$PREFIX"
+    pseudo_dir    = "$D_PSEUDO"
+    restart_mode  = "from_scratch"
+    verbosity     = 'high'
+/
+
+&SYSTEM
+    ibrav       =  4
+    a           =  $PP_A
+    c           =  $C
+    nat         =  $NAT_h
+    ntyp        =  $NTYP_h
+    input_dft   = 'PBE'
+    ecutwfc     =  $ECUTW
+    ecutrho     =  $ECUTRHO
+    occupations = 'smearing'
+    smearing    = 'mp'
+    degauss     =  0.005
+    vdw_corr    = 'DFT-D'
+/
+
+&ELECTRONS
+    conv_thr         =  1.00000e-8
+    mixing_beta      =  0.7
+/
+
+ATOMIC_SPECIES
+$ATOM_SPE_heter
+ATOMIC_POSITIONS (angstrom)
+$ATOM_POS_heter
+K_POINTS {automatic}
+$K_SCF
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pw.x -i \$D_IN/\$F_PREFIX.pp_scf.in > \$D_OUT/\$F_PREFIX.pp_scf.out;
+echo "PP SCF $PREFIX Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.pp_scf.in > \$D_OUT/\$F_PREFIX.pp_scf.out;
+echo "PP SCF $PREFIX Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#PP_scf_1 file creation
+
+if [ $CRE_PP_SCF == 1 ];then
+touch $PWD/$D_PREF/$PREFIX_1.pp_scf.in
+cat > $PWD/$D_PREF/$PREFIX_1.pp_scf.in <<EOF
+&CONTROL
+    calculation   = "scf"
+    outdir        = "$D_INN/work/"
+    prefix        = "$PREFIX_1"
+    pseudo_dir    = "$D_PSEUDO"
+    restart_mode  = "from_scratch"
+    verbosity     = 'high'
+/
+
+&SYSTEM
+    ibrav       =  4
+    a           =  $PP_A
+    c           =  $C
+    nat         =  $NAT_1
+    ntyp        =  $NTYP_1
+    input_dft   = 'PBE'
+    ecutwfc     =  $ECUTW
+    ecutrho     =  $ECUTRHO
+    occupations = 'smearing'
+    smearing    = 'mp'
+    degauss     =  0.005
+    vdw_corr    = 'DFT-D'
+/
+
+&ELECTRONS
+    conv_thr         =  1.00000e-8
+    mixing_beta      =  0.7
+/
+
+ATOMIC_SPECIES
+$ATOM_SPE_1
+ATOMIC_POSITIONS (angstrom)
+$ATOM_POS_1
+K_POINTS {automatic}
+$K_SCF
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pw.x -i \$D_IN/\$F_PREFIX_1.pp_scf.in > \$D_OUT/\$F_PREFIX_1.pp_scf.out;
+echo "PP SCF$PREFIX_1 Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX_1.pp_scf.in > \$D_OUT/\$F_PREFIX_1.pp_scf.out;
+echo "PP SCF$PREFIX_1 Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#PP_scf_2 file creation
+
+if [ $CRE_PP_SCF == 1 ];then
+touch $PWD/$D_PREF/$PREFIX_2.pp_scf.in
+cat > $PWD/$D_PREF/$PREFIX_2.pp_scf.in <<EOF
+&CONTROL
+    calculation   = "scf"
+    outdir        = "$D_INN/work/"
+    prefix        = "$PREFIX_2"
+    pseudo_dir    = "$D_PSEUDO"
+    restart_mode  = "from_scratch"
+    verbosity     = 'high'
+/
+
+&SYSTEM
+    ibrav       =  4
+    a           =  $PP_A
+    c           =  $C
+    nat         =  $NAT_2
+    ntyp        =  $NTYP_2
+    input_dft   = 'PBE'
+    ecutwfc     =  $ECUTW
+    ecutrho     =  $ECUTRHO
+    occupations = 'smearing'
+    smearing    = 'mp'
+    degauss     =  0.005
+    vdw_corr    = 'DFT-D'
+/
+
+&ELECTRONS
+    conv_thr         =  1.00000e-8
+    mixing_beta      =  0.7
+/
+
+ATOMIC_SPECIES
+$ATOM_SPE_2
+ATOMIC_POSITIONS (angstrom)
+$ATOM_POS_2
+K_POINTS {automatic}
+$K_SCF
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pw.x -i \$D_IN/\$F_PREFIX_2.pp_scf.in > \$D_OUT/\$F_PREFIX_2.pp_scf.out;
+echo "PP SCF $PREFIX_2 Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX_2.pp_scf.in > \$D_OUT/\$F_PREFIX_2.pp_scf.out;
+echo "PP SCF $PREFIX_2 Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#PP file creation
+
+if [ $CRE_PP == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.pp.in
+cat > $PWD/$D_PREF/$PREFIX.pp.in <<EOF
+&INPUTPP
+    prefix      = "$PREFIX"
+    outdir      = "$D_INN/work/"
+    plot_num    = 0
+    filplot     = "$D_INN/OUT/$PREFIX.charge"
+/
+&PLOT
+    iflag       = 3
+    output_format = 6
+    fileout     = "$D_INN/OUT/$PREFIX.cube"
+/
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pp.x -i \$D_IN/\$F_PREFIX.pp.in > \$D_OUT/\$F_PREFIX.pp.out;
+echo "$PREFIX PP Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.pp.in > \$D_OUT/\$F_PREFIX.pp.out;
+echo "$PREFIX PP Completed";
+date
+EOF
+fi
+fi
+
+
+########################################################################################
+#PP file creation 1
+
+if [ $CRE_PP == 1 ];then
+touch $PWD/$D_PREF/$PREFIX_1.pp.in
+cat > $PWD/$D_PREF/$PREFIX_1.pp.in <<EOF
+&INPUTPP
+    prefix      = "$PREFIX_1"
+    outdir      = "$D_INN/work/"
+    plot_num    = 0
+    filplot     = "$D_INN/OUT/$PREFIX_1.charge"
+/
+&PLOT
+    iflag       = 3
+    output_format = 6
+    fileout     = "$D_INN/OUT/$PREFIX_1.cube"
+/
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pp.x -i \$D_IN/\$F_PREFIX_1.pp.in > \$D_OUT/\$F_PREFIX_1.pp.out;
+echo "$PREFIX_1 PP Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX_1.pp.in > \$D_OUT/\$F_PREFIX_1.pp.out;
+echo "$PREFIX_1 PP Completed";
+date
+EOF
+fi
+fi
+
+
+########################################################################################
+#PP file creation 2
+
+if [ $CRE_PP == 1 ];then
+touch $PWD/$D_PREF/$PREFIX_2.pp.in
+cat > $PWD/$D_PREF/$PREFIX_2.pp.in <<EOF
+&INPUTPP
+    prefix      = "$PREFIX_2"
+    outdir      = "$D_INN/work/"
+    plot_num    = 0
+    filplot     = "$D_INN/OUT/$PREFIX_2.charge"
+/
+&PLOT
+    iflag       = 3
+    output_format = 6
+    fileout     = "$D_INN/OUT/$PREFIX_2.cube"
+/
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pp.x -i \$D_IN/\$F_PREFIX_2.pp.in > \$D_OUT/\$F_PREFIX_2.pp.out;
+echo "$PREFIX_2 PP Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX_2.pp.in > \$D_OUT/\$F_PREFIX_2.pp.out;
+echo "$PREFIX_2 PP Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#ChargeDiff file creation
+
+if [ $CRE_PP == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.chdiff.in
+cat > $PWD/$D_PREF/$PREFIX.chdiff.in <<EOF
+&INPUTPP
+/
+&PLOT
+    nfile       = 3
+    filepp(1)   = "$D_INN/OUT/$PREFIX.charge", 
+    filepp(2)   = "$D_INN/OUT/$PREFIX_1.charge", 
+    filepp(3)   = "$D_INN/OUT/$PREFIX_2.charge", 
+    weight(1)   = 1
+    weight(2)   =-1
+    weight(3)   =-1
+    iflag       = 3
+    output_format= 6
+    fileout     = "$D_INN/OUT/${PREFIX}_chargediff.cube"
+/
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pp.x -i \$D_IN/\$F_PREFIX.chdiff.in > \$D_OUT/\$F_PREFIX.chdiff.out;
+echo "ChargeDiff Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.chdiff.in > \$D_OUT/\$F_PREFIX.chdiff.out;
+echo "ChargeDiff Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#VB CD file creation
+
+if [ $CRE_VB_CB == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.vb_pp.in
+cat > $PWD/$D_PREF/$PREFIX.vb_pp.in <<EOF
+&INPUTPP
+    prefix      = "$PREFIX"
+    outdir      = "$D_INN/work/"
+    plot_num    = 7
+    kpoint      = 1
+    kband       = $KBAND_VB
+    filplot     = "$D_INN/OUT/${PREFIX}_VB.charge"
+/
+&PLOT
+    iflag       = 3
+    output_format = 6
+    fileout     = "$D_INN/OUT/${PREFIX}_VB.cube"
+/
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pp.x -i \$D_IN/\$F_PREFIX.vb_pp.in > \$D_OUT/\$F_PREFIX.vb_pp.out;
+echo "$PREFIX VB CD Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.vb_pp.in > \$D_OUT/\$F_PREFIX.vb_pp.out;
+echo "$PREFIX VB CD Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#CB CD file creation
+
+if [ $CRE_VB_CB == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.cb_pp.in
+cat > $PWD/$D_PREF/$PREFIX.cb_pp.in <<EOF
+&INPUTPP
+    prefix      = "$PREFIX"
+    outdir      = "$D_INN/work/"
+    plot_num    = 7
+    kpoint      = 1
+    kband       = $KBAND_CB
+    filplot     = "$D_INN/OUT/${PREFIX}_CB.charge"
+/
+&PLOT
+    iflag       = 3
+    output_format = 6
+    fileout     = "$D_INN/OUT/${PREFIX}_CB.cube"
+/
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pp.x -i \$D_IN/\$F_PREFIX.cb_pp.in > \$D_OUT/\$F_PREFIX.cb_pp.out;
+echo "$PREFIX CB CD Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.cb_pp.in > \$D_OUT/\$F_PREFIX.cb_pp.out;
+echo "$PREFIX CB CD Completed";
+date
+EOF
+fi
+fi
+
+########################################################################################
+#RELAX file creation
+if [ $CRE_RLX == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.relax.in
+cat > $PWD/$D_PREF/$PREFIX.relax.in <<EOF
+&CONTROL
+    calculation   = "relax"
+    outdir        = "$D_INN/work/"
+    prefix        = "$PREFIX"
+    pseudo_dir    = "$D_PSEUDO"
+    restart_mode  = "from_scratch"
+    verbosity     = 'high'
+    nstep         = 500
+/
+
+&SYSTEM
+    ibrav       =  4
+    a           =  $A
+    c           =  $C
+    nat         =  $NAT
+    ntyp        =  $NTYP
+    input_dft   = 'PBE'
+    ecutwfc     =  $ECUTW
+    ecutrho     =  $ECUTRHO
+    occupations = 'smearing'
+    smearing    = 'mp'
+    degauss     =  0.005
+    vdw_corr    = 'DFT-D'
+/
+
+&ELECTRONS
+    conv_thr         =  1.00000e-8
+    mixing_beta      =  0.7
+/
+
+&IONS
+
+/
+
+ATOMIC_SPECIES
+$ATOM_SPE
+ATOMIC_POSITIONS ($COORDINATE_TYPE)
+$ATOM_POS
+K_POINTS {automatic}
+$K_SCF
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+\$D_QE/pw.x -i \$D_IN/\$F_PREFIX.relax.in > \$D_OUT/\$F_PREFIX.relax.out;
+echo "RELAX Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.relax.in > \$D_OUT/\$F_PREFIX.relax.out;
+echo "RELAX Completed";
+date
+EOF
+fi
+fi
+
+###################################--THE_END--##########################################
+
