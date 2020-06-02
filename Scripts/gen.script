@@ -85,6 +85,8 @@ ATOM_POS_2="\
 
 KBAND_VB=#VALUE
 KBAND_CB=#VALUE
+KPOINT_VB=#VALUE
+KPOINT_CB=#VALUE
 
 ##################################--STARTING--#########################################
 #Script file creation
@@ -680,7 +682,7 @@ cat > $PWD/$D_PREF/$PREFIX.vb_pp.in <<EOF
     prefix      = "$PREFIX"
     outdir      = "$D_INN/work/"
     plot_num    = 7
-    kpoint      = 1
+    kpoint      = $KPOINT_VB
     kband       = $KBAND_VB
     filplot     = "$D_INN/OUT/${PREFIX}_VB.charge"
 /
@@ -716,7 +718,7 @@ cat > $PWD/$D_PREF/$PREFIX.cb_pp.in <<EOF
     prefix      = "$PREFIX"
     outdir      = "$D_INN/work/"
     plot_num    = 7
-    kpoint      = 1
+    kpoint      = $KPOINT_CB
     kband       = $KBAND_CB
     filplot     = "$D_INN/OUT/${PREFIX}_CB.charge"
 /
