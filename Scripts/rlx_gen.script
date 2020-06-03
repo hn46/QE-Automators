@@ -1,9 +1,10 @@
 #!/bin/bash
 
+#======================INPUT SIDE===================================================
 NPP=-1
 
 PREFIX="graphene+silicene"
-D_PREF="structure_1"
+D_PREF="structure_1_r"
 
 Z_START_VAL=3.00
 Z_STOP_VAL=4.50
@@ -83,7 +84,8 @@ Si     0.0000000000    1.7897858340    $Z_VAL_2
 
 K_POINT="9  9  1  0 0 0"
 
-##################################--STARTING--#########################################
+#======================END OF INPUT SIDE============================================
+#======================PROGRAM SIDE=================================================
 touch $PWD/$D_PREF/${PREFIX}_$Z_VAL.scf.in
 cat > $PWD/$D_PREF/${PREFIX}_$Z_VAL.scf.in <<EOF
 &CONTROL
