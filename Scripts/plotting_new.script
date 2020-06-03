@@ -10,10 +10,10 @@ MANUAL_PREFIX=0
 PREFIX="InN+C_III_"					#Manual input of PREFIX when MANUAL_PREFIX=1
 
 #======================BAND=========================================================
-Y_RANGE_BND=(-1 1)					#For full range keep it empty
+AUTO_KP_FROM_BAND_NSCF_INPUT=1		#For manual input of make 0 and provide with KP_NAME
 KP_NAME=(M "{/Symbol G}" K M)    	#Use "{/Symbol G}" for gamma; if AUTO_KP_FROM_BAND_NSCF_INPUT=1, this will be deactive
 
-AUTO_KP_FROM_BAND_NSCF_INPUT=1		#For manual input of make 0 and provide with KP_NAME
+Y_RANGE_BND=(-1 1)					#For full range keep it empty
 DRAW_VERTICAL_LINES=1				#Use 1 to plot, 0 for not to plot
 
 LINE_COLOR_BAND=6
