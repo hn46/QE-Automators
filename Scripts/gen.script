@@ -30,7 +30,7 @@ ECUTRHO=200
 
 ATOM_SPE="\
 Si     28.0107     Si.UPF
-C      12.0107     C.UPF
+C      12.0100     C.UPF
 "
 
 ATOM_POS="\
