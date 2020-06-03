@@ -66,6 +66,7 @@ LINE_WIDTH_PDOS=1.4
 #PDOS_TOTAL_COLOR=6
 # PDOS_ACTIVE_TOT=1
 
+#======================END OF INPUT SIDE============================================
 #======================PROGRAM SIDE=================================================
 if [[ MANUAL_PREFIX -eq 0 ]]; then
 	PREFIX_TMP=($(ls | grep -w "scf.in" | tr "." "\n" | grep -wv "scf" | grep -wv "in"))

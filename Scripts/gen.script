@@ -2,94 +2,134 @@
 
 NPP=-1          #use -1 for no mpi
 
-CRE_RLX=0
-CRE_SCF=0
-CRE_BAND_NSCF=0
-CRE_BAND=0
-CRE_DOS_NSCF=0
-CRE_DOS=0
-CRE_PROJWFC=0
-CRE_PP_SCF=0
-CRE_PP=0
-CRE_VB_CB=1
+#======================SWITCHES=====================================================
+CRE_RLX=1                   # 1 TO ENABLE, 0 TO DISABLE
+CRE_SCF=1                   # 1 TO ENABLE, 0 TO DISABLE
+CRE_BAND_NSCF=1             # 1 TO ENABLE, 0 TO DISABLE
+CRE_BAND=1                  # 1 TO ENABLE, 0 TO DISABLE
+CRE_DOS_NSCF=1              # 1 TO ENABLE, 0 TO DISABLE
+CRE_DOS=1                   # 1 TO ENABLE, 0 TO DISABLE
+CRE_PROJWFC=1               # 1 TO ENABLE, 0 TO DISABLE
+CRE_PP_SCF=1                # 1 TO ENABLE, 0 TO DISABLE
+CRE_PP=1                    # 1 TO ENABLE, 0 TO DISABLE
+CRE_VB_CB=1                 # 1 TO ENABLE, 0 TO DISABLE
+#======================INPUT SIDE===================================================
+PREFIX="graphene+silicene"
+D_PREF="structure_1"
 
-PREFIX="#VALUE"
-D_PREF="#VALUE"
+D_INN="/Path_to_your_folder_input_file/$D_PREF"
+D_PSEUDO="/Path_to_your_folder_of_PP/"
+D_QEE="/Path_to_your_folder_of_QE/bin"
 
-D_INN="/home/nano3/Desktop/LST/$D_PREF"
-D_PSEUDO="/home/nano3/Desktop/Pseudo/"
-D_QEE="/home/nano3/Desktop/qe-6.5/bin"
+A=3.10
+C=25
+NAT=4
+NTYP=2
+ECUTW=40
+ECUTRHO=200
 
+ATOM_SPE="\
+Si     28.0107     Si.UPF
+C      12.0107     C.UPF
+"
+
+ATOM_POS="\
+C      0.0000000000    0.0000000000    0.0000000000
+C      0.0000000000    1.7897858340    0.0000000000
+Si     0.0000000000    0.0000000000    3.5000000000
+Si     0.0000000000    1.7897858340    4.1000000000
+"
+
+COORDINATE_TYPE="angstrom"       #angstrom or crystal
+
+K_SCF="9  9  1  0 0 0"
+K_BANDS="\
+4
+gG 20
+M  20
+K  20
+gG 20
+"
+K_DOS="32  32  1  0 0 0"
+NGAUSS=-1                       #PDOS Occupation
+
+
+# FOR CHARGE DENSITY CALCULATIONS ONLY
+PP_A=6.2
+
+NAT_h=16
+NTYP_h=2
+
+ATOM_POS_heter="\
+C     0.0000000000    0.0000000000    0.0000000000
+C     0.0000000000    1.7897858340    0.0000000000
+Si    0.0000000000    0.0000000000    3.5000000000
+Si    0.0000000000    1.7897858340    4.1000000000
+C    -1.5500000000    2.6846787520    0.0000000000
+C    -1.5500000000    4.4744645860    0.0000000000
+Si   -1.5500000000    2.6846787520    3.5000000000
+Si   -1.5500000000    4.4744645860    4.1000000000
+C     3.1000000000    0.0000000000    0.0000000000
+C     3.1000000000    1.7897858340    0.0000000000
+Si    3.1000000000    0.0000000000    3.5000000000
+Si    3.1000000000    1.7897858340    4.1000000000
+C     1.5500000000    2.6846787520    0.0000000000
+C     1.5500000000    4.4744645860    0.0000000000
+Si    1.5500000000    2.6846787520    3.5000000000
+Si    1.5500000000    4.4744645860    4.1000000000
+"
+ATOM_SPE_heter="\
+Si     28.0107     Si.UPF
+C      12.0107     C.UPF
+"
+
+PREFIX_1=graphene
+NAT_1=8
+NTYP_1=1
+ATOM_SPE_1="\
+C      12.0107     C.UPF
+"
+ATOM_POS_1="\
+C     0.0000000000    0.0000000000    0.0000000000
+C     0.0000000000    1.7897858340    0.0000000000
+C    -1.5500000000    2.6846787520    0.0000000000
+C    -1.5500000000    4.4744645860    0.0000000000
+C     3.1000000000    0.0000000000    0.0000000000
+C     3.1000000000    1.7897858340    0.0000000000
+C     1.5500000000    2.6846787520    0.0000000000
+C     1.5500000000    4.4744645860    0.0000000000
+"
+
+PREFIX_2=silicene
+NAT_2=8
+NTYP_2=1
+ATOM_SPE_2="\
+Si     28.0107     Si.UPF
+"
+ATOM_POS_2="\
+Si    0.0000000000    0.0000000000    3.5000000000
+Si    0.0000000000    1.7897858340    4.1000000000
+Si   -1.5500000000    2.6846787520    3.5000000000
+Si   -1.5500000000    4.4744645860    4.1000000000
+Si    3.1000000000    0.0000000000    3.5000000000
+Si    3.1000000000    1.7897858340    4.1000000000
+Si    1.5500000000    2.6846787520    3.5000000000
+Si    1.5500000000    4.4744645860    4.1000000000
+"
+
+KBAND_VB=14
+KBAND_CB=15
+KPOINT_VB=5
+KPOINT_CB=9
+
+#======================END OF INPUT SIDE============================================
+#======================PROGRAM SIDE=================================================
 if [ ! -d "$PWD/$D_PREF" ]; then
     mkdir $PWD/$D_PREF
     mkdir $PWD/$D_PREF/OUT
 fi
 
-A=          #VALUE
-C=          #VALUE
-NAT=        #VALUE
-NTYP=       #VALUE
-ECUTW=      #VALUE
-ECUTRHO=    #VALUE
-
-
-ATOM_SPE="\
-#VALUE
-"
-ATOM_POS="\
-#VALUE
-"
-COORDINATE_TYPE="angstrom"       #angstrom or crystal
-
-K_SCF="#VALUE"
-K_BANDS="\
-
-"
-K_DOS="#VALUE"
-NGAUSS=#VALUE           #PDOS
-
-#FOR CHARGE DENSITY CALCULATIONS ONLY
-
-PP_A=#VALUE
-
-NAT_h=#VALUE
-NTYP_h=#VALUE
-
-ATOM_POS_heter="\
-#VALUE
-"
-ATOM_SPE_heter="\
-#VALUE
-"
-
-
-PREFIX_1=#VALUE
-NAT_1=#VALUE
-NTYP_1=#VALUE
-ATOM_SPE_1="\
-#VALUE
-"
-ATOM_POS_1="\
-#VALUE
-"
-
-PREFIX_2=#VALUE
-NAT_2=#VALUE
-NTYP_2=#VALUE
-ATOM_SPE_2="\
-#VALUE
-"
-ATOM_POS_2="\
-#VALUE
-"
-
-KBAND_VB=#VALUE
-KBAND_CB=#VALUE
-KPOINT_VB=#VALUE
-KPOINT_CB=#VALUE
-
-##################################--STARTING--#########################################
-#Script file creation
+#=======================SCRIPT======================================================
 touch $PWD/$D_PREF/$PREFIX.script
 cat > $PWD/$D_PREF/$PREFIX.script << EOF
 #!/bin/sh
@@ -109,7 +149,7 @@ echo "Started Simulation";
 date
 EOF
 
-#SCF file creation
+#=======================SCF=========================================================
 if [ $CRE_SCF == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.scf.in
 cat > $PWD/$D_PREF/$PREFIX.scf.in <<EOF
@@ -165,8 +205,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#Band_nscf file creation
+#=======================BAND NSCF===================================================
 if [ $CRE_BAND_NSCF == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.band_nscf.in
 cat > $PWD/$D_PREF/$PREFIX.band_nscf.in <<EOF
@@ -222,8 +261,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#Band file creation
+#=======================BAND========================================================
 if [ $CRE_BAND == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.band.in
 cat > $PWD/$D_PREF/$PREFIX.band.in <<EOF
@@ -249,8 +287,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#DOS_nscf file creation
+#=======================DOS NSCF====================================================
 if [ $CRE_DOS_NSCF == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.dos_nscf.in
 cat > $PWD/$D_PREF/$PREFIX.dos_nscf.in <<EOF
@@ -304,8 +341,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#DOS file creation
+#=======================DOS=========================================================
 if [ $CRE_DOS == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.dos.in
 cat > $PWD/$D_PREF/$PREFIX.dos.in <<EOF
@@ -330,8 +366,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#PROJWFC file creation
+#=======================PROGWFC=====================================================
 if [ $CRE_PROJWFC == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.projwfc.in
 cat > $PWD/$D_PREF/$PREFIX.projwfc.in <<EOF
@@ -357,9 +392,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#PP_scf file creation
-
+#=======================PP_SCF_HETERO==================================================
 if [[ $CRE_PP_SCF == 1 || $CRE_VB_CB == 1 ]];then
 touch $PWD/$D_PREF/$PREFIX.pp_scf.in
 cat > $PWD/$D_PREF/$PREFIX.pp_scf.in <<EOF
@@ -415,9 +448,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#PP_scf_1 file creation
-
+#=======================PP SCF LAYER 1=============================================
 if [ $CRE_PP_SCF == 1 ];then
 touch $PWD/$D_PREF/$PREFIX_1.pp_scf.in
 cat > $PWD/$D_PREF/$PREFIX_1.pp_scf.in <<EOF
@@ -473,9 +504,8 @@ EOF
 fi
 fi
 
-########################################################################################
-#PP_scf_2 file creation
 
+#=======================PP SCF LAYER 2===============================================
 if [ $CRE_PP_SCF == 1 ];then
 touch $PWD/$D_PREF/$PREFIX_2.pp_scf.in
 cat > $PWD/$D_PREF/$PREFIX_2.pp_scf.in <<EOF
@@ -531,9 +561,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#PP file creation
-
+#=======================PP HETERO=======================================================
 if [ $CRE_PP == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.pp.in
 cat > $PWD/$D_PREF/$PREFIX.pp.in <<EOF
@@ -566,9 +594,7 @@ fi
 fi
 
 
-########################################################################################
-#PP file creation 1
-
+#=======================PP LAYER 1=====================================================
 if [ $CRE_PP == 1 ];then
 touch $PWD/$D_PREF/$PREFIX_1.pp.in
 cat > $PWD/$D_PREF/$PREFIX_1.pp.in <<EOF
@@ -601,9 +627,7 @@ fi
 fi
 
 
-########################################################################################
-#PP file creation 2
-
+#=======================PP LAYER 2=====================================================
 if [ $CRE_PP == 1 ];then
 touch $PWD/$D_PREF/$PREFIX_2.pp.in
 cat > $PWD/$D_PREF/$PREFIX_2.pp.in <<EOF
@@ -635,9 +659,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#ChargeDiff file creation
-
+#=======================CDD========================================================
 if [ $CRE_PP == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.chdiff.in
 cat > $PWD/$D_PREF/$PREFIX.chdiff.in <<EOF
@@ -672,9 +694,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#VB CD file creation
-
+#=======================VB CD=========================================================
 if [ $CRE_VB_CB == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.vb_pp.in
 cat > $PWD/$D_PREF/$PREFIX.vb_pp.in <<EOF
@@ -708,9 +728,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#CB CD file creation
-
+#=======================CB CD=========================================================
 if [ $CRE_VB_CB == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.cb_pp.in
 cat > $PWD/$D_PREF/$PREFIX.cb_pp.in <<EOF
@@ -744,8 +762,7 @@ EOF
 fi
 fi
 
-########################################################################################
-#RELAX file creation
+#=======================RELAX=========================================================
 if [ $CRE_RLX == 1 ];then
 touch $PWD/$D_PREF/$PREFIX.relax.in
 cat > $PWD/$D_PREF/$PREFIX.relax.in <<EOF
@@ -806,5 +823,4 @@ EOF
 fi
 fi
 
-###################################--THE_END--##########################################
-
+#===================================THE_END=========================================
