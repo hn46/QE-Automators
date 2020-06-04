@@ -4,3 +4,4 @@ Scripts for automating the tasks while working with Quantum Espresso
 * `plotting.script` is for ploting band structure, DOS, PDOS for atoms and orbitals.
 
 Goto [Wiki page](https://github.com/hn46/QE-Automators/wiki) to learn how to use the scripts.
+If your are having any problem then go __Issues__ tab, create a __New Issue__ and describe your problem. You can also contact me by sending DM on facebook. 
