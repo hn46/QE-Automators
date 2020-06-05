@@ -123,7 +123,7 @@ EOF
 
 	if [ $DRAW_VERTICAL_LINES -eq 1 ];then
 		cat >> $PWD/Plot_band_$PREFIX.script <<EOF
-set arrow from ${KP_HS_POINTS[0]},graph(0,0) to ${KP_HS_POINTS[0]},graph(1,1) nohead lc $FERMI_LINE_COLOR lw 1.5
+#set arrow from ${KP_HS_POINTS[0]},graph(0,0) to ${KP_HS_POINTS[0]},graph(1,1) nohead lc $FERMI_LINE_COLOR lw 1.5
 set arrow from ${KP_HS_POINTS[1]},graph(0,0) to ${KP_HS_POINTS[1]},graph(1,1) nohead lc $FERMI_LINE_COLOR lw 1.5
 set arrow from ${KP_HS_POINTS[2]},graph(0,0) to ${KP_HS_POINTS[2]},graph(1,1) nohead lc $FERMI_LINE_COLOR lw 1.5
 set arrow from 0,0 to ${KP_HS_POINTS[3]},0 nohead dt "-" lc $VERTICAL_LINE_COLOR lw 1.5
