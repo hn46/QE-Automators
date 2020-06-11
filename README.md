@@ -16,3 +16,14 @@ The scripts are written in __bash__. In fact I don't like bash but in bash, it's
 Goto [Wiki page](https://github.com/hn46/QE-Automators/wiki) to learn how to use the scripts.  
 
 If your are having any problem then go __Issues__ tab, create a __New Issue__ and describe your problem. You can also contact me by sending DMs on facebook.  
+---
+## Main Contributer
+* Me (Sakib)
+
+## Special Thanks to
+* Dr. Sherajul Islam Sir
+* Naim Ferdous Vai
+* Munjurul Alam Zihad Vai
+* Jikrul Sayeed
+* Rayid Hasan Mojumder
+
