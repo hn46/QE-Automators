@@ -23,7 +23,7 @@ If your are having any problem then go __Issues__ tab, create a __New Issue__ an
 * Me (Sakib)
 
 ## Special Thanks to
-* Dr. Sherajul Islam Sir
+* Dr. Md. Sherajul Islam Sir
 * Naim Ferdous Vai
 * Munjurul Alam Zihad Vai
 * Jikrul Sayeed
