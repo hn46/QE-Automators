@@ -1,5 +1,5 @@
 # QE-Automators
-Scripts for automating the tasks while working with Quantum Espresso (QE).  
+Scripts for automating the tasks while working with __Quantum Espresso (QE)__.  
 
 With the help of these scripts you can automate your boring, robotics tasks of making input files, plotting etc. and so you will be able to focus more on brain intensive tasks. There are other GUI apps, kind of similar to this but the main intension of making these scripts is __"Contol"__. Everything of the scripts can be modified easily satisfing your needs and the code is very close to the actual in files of QE.  
 
@@ -13,7 +13,7 @@ With the help of these scripts you can automate your boring, robotics tasks of m
 
 The scripts are written in __bash__. In fact I don't like bash but in bash, it's easier to combine other programs of Linux. The code may be optimized more, may be written in other language but don't wanna do it because my research is nearly finished. I started working on it at late stages of my thesis. You are welcomed to contribute to this project and any help will be appreciated.  
 
-Goto [Wiki page](https://github.com/hn46/QE-Automators/wiki) to learn how to use the scripts.  
+Goto [Wiki page](https://github.com/hn46/QE-Automators/wiki) to learn how to use the scripts. Goto [Resources page](https://github.com/hn46/QE-Automators/wiki/Resources) to get resources to learn about QE simulation.  
 
 If your are having any problem then go __Issues__ tab, create a __New Issue__ and describe your problem. You can also contact me by sending DMs on facebook.  
 
@@ -23,7 +23,7 @@ If your are having any problem then go __Issues__ tab, create a __New Issue__ an
 * Me (Sakib)
 
 ## Special Thanks to
-* Dr. Md. Sherajul Islam Sir
+* Prof. Dr. Md. Sherajul Islam Sir
 * Naim Ferdous Vai
 * Munjurul Alam Zihad Vai
 * Jikrul Sayeed
