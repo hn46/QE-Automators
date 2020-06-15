@@ -13,7 +13,7 @@ With the help of these scripts you can automate your boring, robotic tasks of ma
 
 The scripts are written in __bash__. In fact I didn't like bash but in bash, it's easier to combine other Linux programs. The code may be made more optimized, may be written in other languages but I don't want do it now because my research is nearly finished. I started working on it at late stages of my thesis and now I won't be making major improvements. You are welcomed to improve and contribute to this project and any help will be appreciated.  
 
-Goto [Wiki page](https://github.com/hn46/QE-Automators/wiki) to learn how to use the scripts. Goto [Resources page](https://github.com/hn46/QE-Automators/wiki/Resources) to get resources to learn about QE simulation.  
+__Goto [Wiki page](https://github.com/hn46/QE-Automators/wiki) to learn how to use the scripts. Goto [Resources page](https://github.com/hn46/QE-Automators/wiki/Resources) to get resources to learn about QE simulation.__  
 
 If your are having any problem then go __Issues__ tab, create a __New Issue__ and describe your problem. You can also contact me by sending DMs on facebook.  
 
