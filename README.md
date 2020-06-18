@@ -17,7 +17,7 @@ __Goto [Wiki page](https://github.com/hn46/QE-Automators/wiki) to learn how to u
 
 If your are having any problem then go __Issues__ tab, create a __New Issue__ and describe your problem. You can also contact me by sending DMs on facebook.  
 
-## Contributer
+## Contributor
 * Me (Sakib)
 
 ## Special Thanks to
