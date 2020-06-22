@@ -1,7 +1,7 @@
 # QE-Automators
 Scripts for automating the tasks while working with __Quantum Espresso (QE)__.  
 
-With the help of these basic scripts you can automate your boring, robotic tasks of making input files, plotting etc.; and so you will be able to focus more on brain intensive tasks. There are other GUI apps, kind of similar to this but the main intension of making these scripts is __"Control"__. Everything of the scripts can be modified easily satisfying your needs and the code is very close to the actual input files of QE.  
+With the help of these basic scripts you can automate your boring, robotic tasks of making input files, plotting etc. and so you will be able to focus more on brain-intensive tasks. There are other GUI apps, kind of similar to this but the main intension of making these scripts is __"Control"__. Everything of the scripts can be modified easily satisfying your needs and the code is very close to the actual input files of QE.  
 
 ## List of scripts
 * `gen.script` is for generating input files for scf, band, DOS, PDOS, CDD, CD of VB and CB.
