@@ -35,8 +35,8 @@ if [ ! -d "$PWD/$D_PREF" ]; then
     mkdir $PWD/$D_PREF/OUT
 fi
 
-touch $PWD/$D_PREF/${PREFIX}.script
-cat > $PWD/$D_PREF/${PREFIX}.script << EOF
+touch $PWD/$D_PREF/${PREFIX}.sh
+cat > $PWD/$D_PREF/${PREFIX}.sh << EOF
 #!/bin/sh
 F_PREFIX=${PREFIX}
 D_IN="$D_INN"
@@ -129,12 +129,12 @@ EOF
 Z_VAL_OLD=$(calc $Z_VAL-$INCREM)
 
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/${PREFIX}.script << EOF
+cat >> $PWD/$D_PREF/${PREFIX}.sh << EOF
 \$D_QE/pw.x -i \$D_IN/${PREFIX}_$Z_VAL.scf.in > \$D_OUT/${PREFIX}_$Z_VAL.scf.out;
 echo "Completed >> $Z_VAL Ang";
 EOF
 else
-cat >> $PWD/$D_PREF/${PREFIX}.script << EOF
+cat >> $PWD/$D_PREF/${PREFIX}.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/${PREFIX}_$Z_VAL.scf.in > \$D_OUT/${PREFIX}_$Z_VAL.scf.out;
 echo "Completed >> $Z_VAL Ang";
 EOF

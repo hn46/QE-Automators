@@ -130,8 +130,8 @@ if [ ! -d "$PWD/$D_PREF" ]; then
 fi
 
 #=======================SCRIPT======================================================
-touch $PWD/$D_PREF/$PREFIX.script
-cat > $PWD/$D_PREF/$PREFIX.script << EOF
+touch $PWD/$D_PREF/$PREFIX.sh
+cat > $PWD/$D_PREF/$PREFIX.sh << EOF
 #!/bin/sh
 F_PREFIX=$PREFIX
 F_PREFIX_1=$PREFIX_1
@@ -191,13 +191,13 @@ $K_SCF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.scf.in > \$D_OUT/\$F_PREFIX.scf.out;
 echo "SCF Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.scf.in > \$D_OUT/\$F_PREFIX.scf.out;
 echo "SCF Completed";
 date
@@ -247,13 +247,13 @@ $K_BANDS
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.band_nscf.in > \$D_OUT/\$F_PREFIX.band_nscf.out;
 echo "BAND_NSCF Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.band_nscf.in > \$D_OUT/\$F_PREFIX.band_nscf.out;
 echo "BAND_NSCF Completed";
 date
@@ -273,13 +273,13 @@ cat > $PWD/$D_PREF/$PREFIX.band.in <<EOF
 /
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/bands.x -i \$D_IN/\$F_PREFIX.band.in > \$D_OUT/\$F_PREFIX.band.out;
 echo "BAND Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/bands.x -i \$D_IN/\$F_PREFIX.band.in > \$D_OUT/\$F_PREFIX.band.out;
 echo "BAND Completed";
 date
@@ -327,13 +327,13 @@ $K_DOS
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.dos_nscf.in > \$D_OUT/\$F_PREFIX.dos_nscf.out;
 echo "DOS_NSCF Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.dos_nscf.in > \$D_OUT/\$F_PREFIX.dos_nscf.out;
 echo "DOS_NSCF Completed";
 date
@@ -352,13 +352,13 @@ cat > $PWD/$D_PREF/$PREFIX.dos.in <<EOF
 /
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/dos.x -i \$D_IN/\$F_PREFIX.dos.in > \$D_OUT/\$F_PREFIX.dos.out;
 echo "DOS Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/dos.x -i \$D_IN/\$F_PREFIX.dos.in > \$D_OUT/\$F_PREFIX.dos.out;
 echo "DOS Completed";
 date
@@ -378,13 +378,13 @@ cat > $PWD/$D_PREF/$PREFIX.projwfc.in <<EOF
 /
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/projwfc.x -i \$D_IN/\$F_PREFIX.projwfc.in > \$D_OUT/\$F_PREFIX.projwfc.out;
 echo "PDOS Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/projwfc.x -i \$D_IN/\$F_PREFIX.projwfc.in > \$D_OUT/\$F_PREFIX.projwfc.out;
 echo "PDOS Completed";
 date
@@ -434,13 +434,13 @@ $K_SCF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.pp_scf.in > \$D_OUT/\$F_PREFIX.pp_scf.out;
 echo "PP SCF $PREFIX Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.pp_scf.in > \$D_OUT/\$F_PREFIX.pp_scf.out;
 echo "PP SCF $PREFIX Completed";
 date
@@ -490,13 +490,13 @@ $K_SCF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pw.x -i \$D_IN/\$F_PREFIX_1.pp_scf.in > \$D_OUT/\$F_PREFIX_1.pp_scf.out;
 echo "PP SCF$PREFIX_1 Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX_1.pp_scf.in > \$D_OUT/\$F_PREFIX_1.pp_scf.out;
 echo "PP SCF$PREFIX_1 Completed";
 date
@@ -547,13 +547,13 @@ $K_SCF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pw.x -i \$D_IN/\$F_PREFIX_2.pp_scf.in > \$D_OUT/\$F_PREFIX_2.pp_scf.out;
 echo "PP SCF $PREFIX_2 Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX_2.pp_scf.in > \$D_OUT/\$F_PREFIX_2.pp_scf.out;
 echo "PP SCF $PREFIX_2 Completed";
 date
@@ -579,13 +579,13 @@ cat > $PWD/$D_PREF/$PREFIX.pp.in <<EOF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.pp.in > \$D_OUT/\$F_PREFIX.pp.out;
 echo "$PREFIX PP Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.pp.in > \$D_OUT/\$F_PREFIX.pp.out;
 echo "$PREFIX PP Completed";
 date
@@ -612,13 +612,13 @@ cat > $PWD/$D_PREF/$PREFIX_1.pp.in <<EOF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pp.x -i \$D_IN/\$F_PREFIX_1.pp.in > \$D_OUT/\$F_PREFIX_1.pp.out;
 echo "$PREFIX_1 PP Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX_1.pp.in > \$D_OUT/\$F_PREFIX_1.pp.out;
 echo "$PREFIX_1 PP Completed";
 date
@@ -645,13 +645,13 @@ cat > $PWD/$D_PREF/$PREFIX_2.pp.in <<EOF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pp.x -i \$D_IN/\$F_PREFIX_2.pp.in > \$D_OUT/\$F_PREFIX_2.pp.out;
 echo "$PREFIX_2 PP Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX_2.pp.in > \$D_OUT/\$F_PREFIX_2.pp.out;
 echo "$PREFIX_2 PP Completed";
 date
@@ -680,13 +680,13 @@ cat > $PWD/$D_PREF/$PREFIX.chdiff.in <<EOF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.chdiff.in > \$D_OUT/\$F_PREFIX.chdiff.out;
 echo "ChargeDiff Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.chdiff.in > \$D_OUT/\$F_PREFIX.chdiff.out;
 echo "ChargeDiff Completed";
 date
@@ -714,13 +714,13 @@ cat > $PWD/$D_PREF/$PREFIX.vb_pp.in <<EOF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.vb_pp.in > \$D_OUT/\$F_PREFIX.vb_pp.out;
 echo "$PREFIX VB CD Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.vb_pp.in > \$D_OUT/\$F_PREFIX.vb_pp.out;
 echo "$PREFIX VB CD Completed";
 date
@@ -748,13 +748,13 @@ cat > $PWD/$D_PREF/$PREFIX.cb_pp.in <<EOF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.cb_pp.in > \$D_OUT/\$F_PREFIX.cb_pp.out;
 echo "$PREFIX CB CD Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pp.x -i \$D_IN/\$F_PREFIX.cb_pp.in > \$D_OUT/\$F_PREFIX.cb_pp.out;
 echo "$PREFIX CB CD Completed";
 date
@@ -809,13 +809,13 @@ $K_SCF
 
 EOF
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.relax.in > \$D_OUT/\$F_PREFIX.relax.out;
 echo "RELAX Completed";
 date
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.relax.in > \$D_OUT/\$F_PREFIX.relax.out;
 echo "RELAX Completed";
 date

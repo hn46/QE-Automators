@@ -90,9 +90,9 @@ if [ $CRE_BAND_PLT -eq 1 ];then
 		fi
 	done
 	
-	touch $PWD/Plot_band_$PREFIX.script
+	touch $PWD/Plot_band_$PREFIX.sh
 	if [[ $CRE_PNG -eq 1 ]]; then
-		cat > $PWD/Plot_band_$PREFIX.script <<EOF
+		cat > $PWD/Plot_band_$PREFIX.sh <<EOF
 #!/usr/bin/gnuplot -persist
 
 reset
@@ -102,7 +102,7 @@ set label '$TEXT_BND' at ${L_POS[0]},${L_POS[1]} font ',$FONT_SIZ'
 
 EOF
 	else
-		cat > $PWD/Plot_band_$PREFIX.script <<EOF
+		cat > $PWD/Plot_band_$PREFIX.sh <<EOF
 #!/usr/bin/gnuplot -persist
 
 reset
@@ -112,17 +112,17 @@ EOF
 fi
 
 	if [[ $AUTO_KP_FROM_BAND_NSCF_INPUT == '1' ]];then 			#Automation of KP
-		cat >> $PWD/Plot_band_$PREFIX.script <<EOF
+		cat >> $PWD/Plot_band_$PREFIX.sh <<EOF
 set xtics ("${KP_NAME_2[1]}" ${KP_HS_POINTS[0]},"${KP_NAME_2[2]}" ${KP_HS_POINTS[1]},"${KP_NAME_2[3]}" ${KP_HS_POINTS[2]},"${KP_NAME_2[4]}" ${KP_HS_POINTS[3]}) font ',14'
 EOF
 	else
-		cat >> $PWD/Plot_band_$PREFIX.script <<EOF
+		cat >> $PWD/Plot_band_$PREFIX.sh <<EOF
 set xtics ("${KP_NAME[0]}" ${KP_HS_POINTS[0]},"${KP_NAME[1]}" ${KP_HS_POINTS[1]},"${KP_NAME[2]}" ${KP_HS_POINTS[2]},"${KP_NAME[3]}" ${KP_HS_POINTS[3]}) font ',14'
 EOF
 	fi
 
 	if [ $DRAW_VERTICAL_LINES -eq 1 ];then
-		cat >> $PWD/Plot_band_$PREFIX.script <<EOF
+		cat >> $PWD/Plot_band_$PREFIX.sh <<EOF
 #set arrow from ${KP_HS_POINTS[0]},graph(0,0) to ${KP_HS_POINTS[0]},graph(1,1) nohead lc $FERMI_LINE_COLOR lw 1.5
 set arrow from ${KP_HS_POINTS[1]},graph(0,0) to ${KP_HS_POINTS[1]},graph(1,1) nohead lc $FERMI_LINE_COLOR lw 1.5
 set arrow from ${KP_HS_POINTS[2]},graph(0,0) to ${KP_HS_POINTS[2]},graph(1,1) nohead lc $FERMI_LINE_COLOR lw 1.5
@@ -130,7 +130,7 @@ set arrow from 0,0 to ${KP_HS_POINTS[3]},0 nohead dt "-" lc $VERTICAL_LINE_COLOR
 EOF
 	fi
 	
-	cat >> $PWD/Plot_band_$PREFIX.script <<EOF
+	cat >> $PWD/Plot_band_$PREFIX.sh <<EOF
 set yrange [${Y_RANGE_BND[0]} : ${Y_RANGE_BND[1]}]
 set ylabel '$Y_LBL_BND' offset 2
 set xlabel '$X_LBL_BND'
@@ -139,7 +139,7 @@ FE=$F_ENG_BND
 plot "$PWD/OUT/$PREFIX.band.gnu" using 1:(\$2-FE) w l lc $LINE_COLOR_BAND lw $LINE_WIDTH_BAND title "$BND_LEGEND" 
 
 EOF
-	./Plot_band_$PREFIX.script
+	./Plot_band_$PREFIX.sh
 else
 	echo BAND NOT ACTIVATED
 fi
@@ -148,22 +148,22 @@ if [ $CRE_DOS_PLT -eq 1 ];then
 	#F_ENG_DOS=$(grep "Fermi" $PWD/OUT/$PREFIX.dos | awk {'print $9'})
 	F_ENG_DOS=$(grep "Fermi" $PWD/OUT/$PREFIX.scf.out | awk {'print $5'})
 
-	touch $PWD/Plot_dos_$PREFIX.script
+	touch $PWD/Plot_dos_$PREFIX.sh
 	if [[ $CRE_PNG -eq 1 ]]; then
-		cat > $PWD/Plot_dos_$PREFIX.script <<EOF
+		cat > $PWD/Plot_dos_$PREFIX.sh <<EOF
 #!/usr/bin/gnuplot -persist
 reset
 set term pngcairo font 'Arial-Bold,14'
 set output "${PREFIX}_DOS.png"
 EOF
 	else
-		cat > $PWD/Plot_dos_$PREFIX.script <<EOF
+		cat > $PWD/Plot_dos_$PREFIX.sh <<EOF
 #!/usr/bin/gnuplot -persist
 reset
 EOF
 	fi
 	
-	cat >> $PWD/Plot_dos_$PREFIX.script <<EOF
+	cat >> $PWD/Plot_dos_$PREFIX.sh <<EOF
 set arrow from 0,0 to ${X_RANGE_DOS[1]},0 nohead dt "-" lc $FERMI_LINE_COLOR lw 1.5
 set yrange [${Y_RANGE_DOS[0]} : ${Y_RANGE_DOS[1]}]
 set xrange [${X_RANGE_DOS[0]} : ${X_RANGE_DOS[1]}]
@@ -172,7 +172,7 @@ set xlabel '$X_LBL_DOS'
 FE=$F_ENG_DOS
 plot "$PWD/OUT/$PREFIX.dos" using 2:(\$1-FE) w l lc $LINE_COLOR_DOS lw $LINE_WIDTH_DOS  title '$DOS_LEGEND'
 EOF
-	./Plot_dos_$PREFIX.script
+	./Plot_dos_$PREFIX.sh
 else
 	echo DOS NOT ACTIVATED
 fi
@@ -183,9 +183,9 @@ if [ $CRE_PDOS_PLT_PER_ATOM -eq 1 ];then
 	F_ENG_PDOS=$(grep "Fermi" $PWD/OUT/$PREFIX.scf.out | awk {'print $5'})
 
 	
-	touch $PWD/Plot_pdos_ATOM_$PREFIX.script
+	touch $PWD/Plot_pdos_ATOM_$PREFIX.sh
 	if [[ $CRE_PNG -eq 1 ]]; then
-		cat > $PWD/Plot_pdos_ATOM_$PREFIX.script <<EOF
+		cat > $PWD/Plot_pdos_ATOM_$PREFIX.sh <<EOF
 #!/usr/bin/gnuplot -persist
 
 reset
@@ -193,13 +193,13 @@ set term pngcairo font 'Arial-Bold,14'
 set output "${PREFIX}_PDOS_PER_ATOM.png"
 EOF
 	else
-		cat > $PWD/Plot_pdos_ATOM_$PREFIX.script <<EOF
+		cat > $PWD/Plot_pdos_ATOM_$PREFIX.sh <<EOF
 #!/usr/bin/gnuplot -persist
 
 reset
 EOF
 	fi
-		cat >> $PWD/Plot_pdos_ATOM_$PREFIX.script <<EOF
+		cat >> $PWD/Plot_pdos_ATOM_$PREFIX.sh <<EOF
 set yrange [${Y_RANGE_PDOS[0]} : ${Y_RANGE_PDOS[1]}]
 set xrange [${X_RANGE_PDOS[0]} : ${X_RANGE_PDOS[1]}]
 set ylabel '$Y_LBL_PDOS' offset 2
@@ -222,7 +222,7 @@ EOF
 			FILE_ATOM_IND[j]="$PWD/OUT/${FILE_ATOM_IND[j]}"
 		done
 		$D_QEE/sumpdos.x ${FILE_ATOM_IND[*]} > $PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]}
-		cat >> $PWD/Plot_pdos_ATOM_$PREFIX.script <<EOF
+		cat >> $PWD/Plot_pdos_ATOM_$PREFIX.sh <<EOF
 "$PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]}" using (\$1-FE):2 w l lc ${COLORS_ATOM[i-1]} lw $LINE_WIDTH_PDOS title '${NAME_OF_ATOMS[i]}', \\
 EOF
 	done
@@ -233,11 +233,11 @@ EOF
 		FILE_ATOM_TOT[j]="$PWD/OUT/${FILE_ATOM_TOT[j]}"
 	done
 	$D_QEE/sumpdos.x ${FILE_ATOM_TOT[*]} > $PWD/OUT/PDOS_post/$PREFIX.pdos_total
-	cat >> $PWD/Plot_pdos_ATOM_$PREFIX.script <<EOF
+	cat >> $PWD/Plot_pdos_ATOM_$PREFIX.sh <<EOF
 "$PWD/OUT/PDOS_post/$PREFIX.pdos_total" using (\$1-FE):2 w l lc $COLORS_HETER lw $LINE_WIDTH_PDOS title 'Heterostructure', \\
 EOF
-	chmod +x ./Plot_pdos_ATOM_$PREFIX.script
-	./Plot_pdos_ATOM_$PREFIX.script
+	chmod +x ./Plot_pdos_ATOM_$PREFIX.sh
+	./Plot_pdos_ATOM_$PREFIX.sh
 else
 	echo PDOS_PER_ATOM NOT ACTIVATED
 fi	
@@ -249,9 +249,9 @@ if [ $CRE_PDOS_PLT_PER_ORBITAL -eq 1 ];then
 	F_ENG_PDOS=$(grep "Fermi" $PWD/OUT/$PREFIX.scf.out | awk {'print $5'})
 
 	
-	touch $PWD/Plot_pdos_ORBITAL_$PREFIX.script
+	touch $PWD/Plot_pdos_ORBITAL_$PREFIX.sh
 	if [[ $CRE_PNG -eq 1 ]]; then
-		cat > $PWD/Plot_pdos_ORBITAL_$PREFIX.script <<EOF
+		cat > $PWD/Plot_pdos_ORBITAL_$PREFIX.sh <<EOF
 #!/usr/bin/gnuplot -persist
 
 reset
@@ -259,13 +259,13 @@ set term pngcairo font 'Arial-Bold,14'
 set output "${PREFIX}_PDOS_PER_ORBITAL.png"
 EOF
 	else
-		cat > $PWD/Plot_pdos_ORBITAL_$PREFIX.script <<EOF
+		cat > $PWD/Plot_pdos_ORBITAL_$PREFIX.sh <<EOF
 #!/usr/bin/gnuplot -persist
 
 reset
 EOF
 	fi
-		cat >> $PWD/Plot_pdos_ORBITAL_$PREFIX.script <<EOF
+		cat >> $PWD/Plot_pdos_ORBITAL_$PREFIX.sh <<EOF
 set yrange [${Y_RANGE_PDOS[0]} : ${Y_RANGE_PDOS[1]}]
 set xrange [${X_RANGE_PDOS[0]} : ${X_RANGE_PDOS[1]}]
 set ylabel '$Y_LBL_PDOS' offset 2
@@ -290,7 +290,7 @@ EOF
 					FILE_ORB_IND[j]="$PWD/OUT/${FILE_ORB_IND[j]}"
 				done
 				$D_QEE/sumpdos.x ${FILE_ORB_IND[*]} > $PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]}-${ORBITALS[k]}
-				cat >> $PWD/Plot_pdos_ORBITAL_$PREFIX.script <<EOF
+				cat >> $PWD/Plot_pdos_ORBITAL_$PREFIX.sh <<EOF
 "$PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]}-${ORBITALS[k]}" using (\$1-FE):2 w l lc ${COLORS_ORBITAL[$color_counter]} lw $LINE_WIDTH_PDOS title '${NAME_OF_ATOMS[i]}-${ORBITALS[k]}', \\
 EOF
 			color_counter=$(($color_counter+1))
@@ -304,11 +304,11 @@ EOF
 		FILE_ORB_TOT[j]="$PWD/OUT/${FILE_ORB_TOT[j]}"
 	done
 	$D_QEE/sumpdos.x ${FILE_ORB_TOT[*]} > $PWD/OUT/PDOS_post/$PREFIX.pdos_total
-	cat >> $PWD/Plot_pdos_ORBITAL_$PREFIX.script <<EOF
+	cat >> $PWD/Plot_pdos_ORBITAL_$PREFIX.sh <<EOF
 "$PWD/OUT/PDOS_post/$PREFIX.pdos_total" using (\$1-FE):2 w l lc $COLORS_HETER lw $LINE_WIDTH_PDOS title 'Heterostructure', \\
 EOF
-	chmod +x ./Plot_pdos_ORBITAL_$PREFIX.script
-	./Plot_pdos_ORBITAL_$PREFIX.script
+	chmod +x ./Plot_pdos_ORBITAL_$PREFIX.sh
+	./Plot_pdos_ORBITAL_$PREFIX.sh
 	
 else
 	echo PDOS_PER_ORBITAL NOT ACTIVATED
@@ -342,7 +342,7 @@ fi
 # 		done
 # 		paste $PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]} $PWD/PDOS_tmp/sum > $PWD/PDOS_tmp/sum1
 # 		cat $PWD/PDOS_tmp/sum1 > $PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]}
-# 		cat >> $PWD/Plot_pdos_ATOM_$PREFIX.script <<EOF
+# 		cat >> $PWD/Plot_pdos_ATOM_$PREFIX.sh <<EOF
 # "$PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]}" using (\$1-FE):2 w l lc ${COLORS_ATOM[i-1]} lw $LINE_WIDTH_PDOS title '${NAME_OF_ATOMS[i]}', \\
 # EOF
 # 	done
@@ -350,11 +350,11 @@ fi
 # 	cat $PWD/OUT/${FILE_ATOM_IND[0]} | awk {'print $1'} > $PWD/OUT/PDOS_post/$PREFIX.pdos_total
 # 	paste $PWD/OUT/PDOS_post/$PREFIX.pdos_total $PWD/PDOS_tmp/sum_all > $PWD/PDOS_tmp/sum1
 # 	cat $PWD/PDOS_tmp/sum1 > $PWD/OUT/PDOS_post/$PREFIX.pdos_total
-# 	cat >> $PWD/Plot_pdos_ATOM_$PREFIX.script <<EOF
+# 	cat >> $PWD/Plot_pdos_ATOM_$PREFIX.sh <<EOF
 # "$PWD/OUT/PDOS_post/$PREFIX.pdos_total" using (\$1-FE):2 w l lc $COLORS_HETER lw $LINE_WIDTH_PDOS title 'Heterostructure', \\
 # EOF
-# 	chmod +x ./Plot_pdos_ATOM_$PREFIX.script
-# 	./Plot_pdos_ATOM_$PREFIX.script
+# 	chmod +x ./Plot_pdos_ATOM_$PREFIX.sh
+# 	./Plot_pdos_ATOM_$PREFIX.sh
 
 	
 	
@@ -392,7 +392,7 @@ fi
 # 				paste $PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]}-${ORBITALS[k]} $PWD/PDOS_tmp/sum > $PWD/PDOS_tmp/sum1
 # 				cat $PWD/PDOS_tmp/sum1 > $PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]}-${ORBITALS[k]}
 # 				# rm -fr $PWD/PDOS_tmp	#Comment it for debugging purpose
-# 				cat >> $PWD/Plot_pdos_ORBITAL_$PREFIX.script <<EOF
+# 				cat >> $PWD/Plot_pdos_ORBITAL_$PREFIX.sh <<EOF
 # "$PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]}-${ORBITALS[k]}" using (\$1-FE):2 w l lc ${COLORS_ORBITAL[$color_counter]} lw $LINE_WIDTH_PDOS title '${NAME_OF_ATOMS[i]}-${ORBITALS[k]}', \\
 # EOF
 # 			color_counter=$(($color_counter+1))
@@ -403,11 +403,11 @@ fi
 # 	cat $PWD/OUT/${FILE_ATOM_IND[0]} | awk {'print $1'} > $PWD/OUT/PDOS_post/$PREFIX.pdos_total
 # 	paste $PWD/OUT/PDOS_post/$PREFIX.pdos_total $PWD/PDOS_tmp/sum_all > $PWD/PDOS_tmp/sum1
 # 	cat $PWD/PDOS_tmp/sum1 > $PWD/OUT/PDOS_post/$PREFIX.pdos_total
-# 	cat >> $PWD/Plot_pdos_ORBITAL_$PREFIX.script <<EOF
+# 	cat >> $PWD/Plot_pdos_ORBITAL_$PREFIX.sh <<EOF
 # "$PWD/OUT/PDOS_post/$PREFIX.pdos_total" using (\$1-FE):2 w l lc $COLORS_HETER lw $LINE_WIDTH_PDOS title 'Heterostructure', \\
 # EOF
-# 	chmod +x ./Plot_pdos_ORBITAL_$PREFIX.script
-# 	./Plot_pdos_ORBITAL_$PREFIX.script
+# 	chmod +x ./Plot_pdos_ORBITAL_$PREFIX.sh
+# 	./Plot_pdos_ORBITAL_$PREFIX.sh
 	
 # 	TYPES=$(grep "ntyp" $PWD/$PREFIX.scf.in | awk {'print $3'})
 # 	ATM=($(grep -A $(calc $NO_OF_ATOMS+1) "ATOMIC_POSITION" $PWD/$PREFIX.scf.in | awk {'print $1'}))  #ARRAY
@@ -427,22 +427,22 @@ fi
 # 			if [[ ${USE_CUSTOM[j]} -eq 1 ]]; then
 # 				if [[ ${FIRST_TIME[j]} -eq 1 ]]; then
 # 					FIRST_TIME[j]=0
-# 					cat >> $PWD/Plot_pdos_$PREFIX.script <<EOF
+# 					cat >> $PWD/Plot_pdos_$PREFIX.sh <<EOF
 # "$PWD/OUT/$PREFIX.pdos_atm#$i(${ATM[i]})_wfc#$kk(${ORBITALS_CUS[k]})" using (\$1-FE):2 w l lc ${COLORS[j]} lw $LINE_WIDTH_PDOS title '${ATM[i]}', \\
 # EOF
 # 				else
-# 					cat >> $PWD/Plot_pdos_$PREFIX.script <<EOF
+# 					cat >> $PWD/Plot_pdos_$PREFIX.sh <<EOF
 # "$PWD/OUT/$PREFIX.pdos_atm#$i(${ATM[i]})_wfc#$kk(${ORBITALS_CUS[k]})" using (\$1-FE):2 w l lc ${COLORS[j]} lw $LINE_WIDTH_PDOS notitle, \\
 # EOF
 # 				fi
 # 			else
 # 				if [[ ${FIRST_TIME[j]} -eq 1 ]]; then
 # 					FIRST_TIME[j]=0
-# 					cat >> $PWD/Plot_pdos_$PREFIX.script <<EOF
+# 					cat >> $PWD/Plot_pdos_$PREFIX.sh <<EOF
 # "$PWD/OUT/$PREFIX.pdos_atm#$i(${ATM[i]})_wfc#$kk(${ORBITALS[k]})" using (\$1-FE):2 w l lc ${COLORS[j]} lw $LINE_WIDTH_PDOS title '${ATM[i]}', \\
 # EOF
 # 				else
-# 					cat >> $PWD/Plot_pdos_$PREFIX.script <<EOF
+# 					cat >> $PWD/Plot_pdos_$PREFIX.sh <<EOF
 # "$PWD/OUT/$PREFIX.pdos_atm#$i(${ATM[i]})_wfc#$kk(${ORBITALS[k]})" using (\$1-FE):2 w l lc ${COLORS[j]} lw $LINE_WIDTH_PDOS notitle, \\
 # EOF
 # 				fi
@@ -450,11 +450,11 @@ fi
 #  		done
 # 	done
 # 	if [[ $PDOS_ACTIVE_TOT -eq 1 ]]; then
-# 		cat >> $PWD/Plot_pdos_$PREFIX.script <<EOF
+# 		cat >> $PWD/Plot_pdos_$PREFIX.sh <<EOF
 # "$PWD/OUT/$PREFIX.pdos_tot" using (\$1-FE):2 w l lc $PDOS_TOTAL_COLOR lw $LINE_WIDTH_PDOS title 'Heterostructure'
 # EOF
 # 	fi
-# 	./Plot_pdos_$PREFIX.script
+# 	./Plot_pdos_$PREFIX.sh
 # else
 # 	echo PDOS NOT ACTIVATED
 # fi

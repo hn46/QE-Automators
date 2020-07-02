@@ -2,9 +2,9 @@
 
 NPP=-1
 #=============================================SWITCHES=====================================================
-TEST_KP=0                           #Use 1 to plot, 0 for not to plot
+TEST_KP=1                           #Use 1 to plot, 0 for not to plot
 TEST_ECUT=1                         #Use 1 to plot, 0 for not to plot
-TEST_ECUTrho=0                      #Use 1 to plot, 0 for not to plot
+TEST_ECUTrho=1                      #Use 1 to plot, 0 for not to plot
 #=============================================BAND=========================================================
 PREFIX="Si_ONC"
 D_PREF=$PREFIX
@@ -59,8 +59,8 @@ if [ ! -d "$PWD/$D_PREF/ECUTrho" ]; then
 fi
 #===============================================KP=========================================================
 if [ $TEST_KP == 1 ];then
-touch $PWD/$D_PREF/$PREFIX\_KP.script
-cat > $PWD/$D_PREF/$PREFIX\_KP.script << EOF
+touch $PWD/$D_PREF/$PREFIX\_KP.sh
+cat > $PWD/$D_PREF/$PREFIX\_KP.sh << EOF
 #!/bin/sh
 F_PREFIX=KP_$PREFIX
 D_IN="$D_INN/KP"
@@ -121,13 +121,13 @@ $KP_VAL  $KP_VAL  1  0 0 0
 EOF
 
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX\_KP.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX\_KP.sh << EOF
 \$D_QE/pw.x -i \$D_IN/KP_$PREFIX$KP_VAL.scf.in > \$D_OUT/KP_$PREFIX$KP_VAL.scf.out;
 echo "K_Points >> $KP_VAL $KP_VAL 1";
 grep ! \$D_OUT/KP_$PREFIX$KP_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/KP_$PREFIX.gnu
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX\_KP.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX\_KP.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/KP_$PREFIX$KP_VAL.scf.in > \$D_OUT/KP_$PREFIX$KP_VAL.scf.out;
 echo "K_Points >> $KP_VAL $KP_VAL 1";
 grep ! \$D_OUT/KP_$PREFIX$KP_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/KP_$PREFIX.gnu
@@ -138,8 +138,8 @@ done
 fi
 #=============================================ECUTWFC======================================================
 if [ $TEST_ECUT == 1 ];then
-touch $PWD/$D_PREF/$PREFIX\_ECUT.script
-cat > $PWD/$D_PREF/$PREFIX\_ECUT.script << EOF
+touch $PWD/$D_PREF/$PREFIX\_ECUT.sh
+cat > $PWD/$D_PREF/$PREFIX\_ECUT.sh << EOF
 #!/bin/sh
 F_PREFIX=ECUT_$PREFIX
 D_IN="$D_INN/ECUT"
@@ -200,13 +200,13 @@ $KP_PICKED
 EOF
 
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX\_ECUT.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX\_ECUT.sh << EOF
 \$D_QE/pw.x -i \$D_IN/ECUT_$PREFIX$ECUT_VAL.scf.in > \$D_OUT/ECUT_$PREFIX$ECUT_VAL.scf.out;
 echo "Completed >> $ECUT_VAL Ry";
 grep ! \$D_OUT/ECUT_$PREFIX$ECUT_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/ECUT_$PREFIX.gnu
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX\_ECUT.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX\_ECUT.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/ECUT_$PREFIX$ECUT_VAL.scf.in > \$D_OUT/ECUT_$PREFIX$ECUT_VAL.scf.out;
 echo "Completed >> $ECUT_VAL Ry";
 grep ! \$D_OUT/ECUT_$PREFIX$ECUT_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/ECUT_$PREFIX.gnu
@@ -217,8 +217,8 @@ fi
 
 #=============================================ECUTWFC======================================================
 if [ $TEST_ECUTrho == 1 ];then
-touch $PWD/$D_PREF/$PREFIX\_ECUTrho.script
-cat > $PWD/$D_PREF/$PREFIX\_ECUTrho.script << EOF
+touch $PWD/$D_PREF/$PREFIX\_ECUTrho.sh
+cat > $PWD/$D_PREF/$PREFIX\_ECUTrho.sh << EOF
 #!/bin/sh
 F_PREFIX=ECUTrho_$PREFIX
 D_IN="$D_INN/ECUTrho"
@@ -279,13 +279,13 @@ $KP_PICKED
 EOF
 
 if [ $NPP == -1 ];then
-cat >> $PWD/$D_PREF/$PREFIX\_ECUTrho.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX\_ECUTrho.sh << EOF
 \$D_QE/pw.x -i \$D_IN/ECUTrho_$PREFIX$ECUTrho_VAL.scf.in > \$D_OUT/ECUTrho_$PREFIX$ECUTrho_VAL.scf.out;
 echo "Completed >> $ECUTrho_VAL Ry";
 grep ! \$D_OUT/ECUTrho_$PREFIX$ECUTrho_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/ECUTrho_$PREFIX.gnu
 EOF
 else
-cat >> $PWD/$D_PREF/$PREFIX\_ECUTrho.script << EOF
+cat >> $PWD/$D_PREF/$PREFIX\_ECUTrho.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/ECUTrho_$PREFIX$ECUTrho_VAL.scf.in > \$D_OUT/ECUTrho_$PREFIX$ECUTrho_VAL.scf.out;
 echo "Completed >> $ECUTrho_VAL Ry";
 grep ! \$D_OUT/ECUTrho_$PREFIX$ECUTrho_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/ECUTrho_$PREFIX.gnu
