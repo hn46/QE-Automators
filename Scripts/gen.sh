@@ -51,7 +51,6 @@ K  20
 gG 20
 "
 K_DOS="32  32  1  0 0 0"
-NGAUSS=-1                       #PDOS Occupation
 
 
 # FOR CHARGE DENSITY CALCULATIONS ONLY
@@ -373,7 +372,6 @@ cat > $PWD/$D_PREF/$PREFIX.projwfc.in <<EOF
 &PROJWFC
     outdir = "$D_INN/work/"
     prefix = "$PREFIX"
-    ngauss = $NGAUSS
     filpdos = "$D_INN/OUT/$PREFIX"
 /
 EOF
