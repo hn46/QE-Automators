@@ -226,7 +226,8 @@ EOF
 "$PWD/OUT/PDOS_post/$PREFIX.pdos_${NAME_OF_ATOMS[i]}" using (\$1-FE):2 w l lc ${COLORS_ATOM[i-1]} lw $LINE_WIDTH_PDOS title '${NAME_OF_ATOMS[i]}', \\
 EOF
 	done
-	echo "====== SET $(($i-1)) UNIQUE ATOM COLORS ======"
+	tput setaf 1; echo "====== SET $(($i-1)) UNIQUE ATOM COLORS ======"
+	tput setaf 255;
 	FILE_ATOM_TOT=($(ls $PWD/OUT/ | grep "pdos_atm"))
 	NO_FILE_ATOM_TOT=$(ls $PWD/OUT/ | grep "pdos_atm" | wc -l)
 	for (( j = 0; j < NO_FILE_ATOM_TOT; j++ )); do
@@ -297,7 +298,8 @@ EOF
 			fi
 		done
 	done
-	echo "====== SET $color_counter UNIQUE ORBITAL COLORS ======"
+	tput setaf 1; echo "====== SET $color_counter UNIQUE ORBITAL COLORS ======"
+	tput setaf 255;
 	FILE_ORB_TOT=($(ls $PWD/OUT/ | grep "pdos_atm"))
 	NO_FILE_ORB_TOT=$(ls $PWD/OUT/ | grep "pdos_atm" | wc -l)
 	for (( j = 0; j < NO_FILE_ORB_TOT; j++ )); do
