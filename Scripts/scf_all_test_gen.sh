@@ -9,7 +9,7 @@ TEST_ECUTrho=1                      #Use 1 to plot, 0 for not to plot
 PREFIX="Si_ONC"
 D_PREF=$PREFIX
 #===============================================KP=========================================================
-KP_START_VAL=1
+KP_START_VAL=3
 KP_STOP_VAL=20
 KP_INCREM=1
 KP_VAL=$KP_START_VAL
@@ -74,6 +74,7 @@ fi
 touch \$D_OUT/KP_$PREFIX.gnu
 
 echo "Started K_Point Test";
+date
 EOF
 
 #SCF file creation
@@ -125,12 +126,14 @@ cat >> $PWD/$D_PREF/$PREFIX\_KP.sh << EOF
 \$D_QE/pw.x -i \$D_IN/KP_$PREFIX$KP_VAL.scf.in > \$D_OUT/KP_$PREFIX$KP_VAL.scf.out;
 echo "K_Points >> $KP_VAL $KP_VAL 1";
 grep ! \$D_OUT/KP_$PREFIX$KP_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/KP_$PREFIX.gnu
+date
 EOF
 else
 cat >> $PWD/$D_PREF/$PREFIX\_KP.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/KP_$PREFIX$KP_VAL.scf.in > \$D_OUT/KP_$PREFIX$KP_VAL.scf.out;
 echo "K_Points >> $KP_VAL $KP_VAL 1";
 grep ! \$D_OUT/KP_$PREFIX$KP_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/KP_$PREFIX.gnu
+date
 EOF
 fi
 
@@ -153,6 +156,7 @@ fi
 touch \$D_OUT/ECUT_$PREFIX.gnu
 
 echo "Started ECUTWFC Test";
+date
 EOF
 
 #SCF file creation
@@ -204,12 +208,14 @@ cat >> $PWD/$D_PREF/$PREFIX\_ECUT.sh << EOF
 \$D_QE/pw.x -i \$D_IN/ECUT_$PREFIX$ECUT_VAL.scf.in > \$D_OUT/ECUT_$PREFIX$ECUT_VAL.scf.out;
 echo "Completed >> $ECUT_VAL Ry";
 grep ! \$D_OUT/ECUT_$PREFIX$ECUT_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/ECUT_$PREFIX.gnu
+date
 EOF
 else
 cat >> $PWD/$D_PREF/$PREFIX\_ECUT.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/ECUT_$PREFIX$ECUT_VAL.scf.in > \$D_OUT/ECUT_$PREFIX$ECUT_VAL.scf.out;
 echo "Completed >> $ECUT_VAL Ry";
 grep ! \$D_OUT/ECUT_$PREFIX$ECUT_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/ECUT_$PREFIX.gnu
+date
 EOF
 fi
 done
@@ -283,12 +289,14 @@ cat >> $PWD/$D_PREF/$PREFIX\_ECUTrho.sh << EOF
 \$D_QE/pw.x -i \$D_IN/ECUTrho_$PREFIX$ECUTrho_VAL.scf.in > \$D_OUT/ECUTrho_$PREFIX$ECUTrho_VAL.scf.out;
 echo "Completed >> $ECUTrho_VAL Ry";
 grep ! \$D_OUT/ECUTrho_$PREFIX$ECUTrho_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/ECUTrho_$PREFIX.gnu
+date
 EOF
 else
 cat >> $PWD/$D_PREF/$PREFIX\_ECUTrho.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/ECUTrho_$PREFIX$ECUTrho_VAL.scf.in > \$D_OUT/ECUTrho_$PREFIX$ECUTrho_VAL.scf.out;
 echo "Completed >> $ECUTrho_VAL Ry";
 grep ! \$D_OUT/ECUTrho_$PREFIX$ECUTrho_VAL.scf.out | awk {'print \$5'} >> \$D_OUT/ECUTrho_$PREFIX.gnu
+date
 EOF
 fi
 done
