@@ -11,6 +11,8 @@ With the help of these basic scripts you can automate your boring, robotic tasks
 * `interlayerChBnd.sh` is for generating input files related to interlayer distance vs band gap.
 * `rlx_gen.sh` is for generating input files for manual relax.
 
+__Update (28/4/21): Phonon will be added soon.__
+
 The scripts are written in __bash__. In fact I didn't like bash but in bash, it's easier to combine other Linux programs. The code may be made more optimized, may be written in other languages but I don't want do it now because my research is nearly finished. I started working on it at late stages of my thesis and now I won't be making major improvements. You are welcomed to improve and contribute to this project and any help will be appreciated.  
 
 __Goto [Wiki page](https://github.com/hn46/QE-Automators/wiki) to learn how to use the scripts. Goto [Resources page](https://github.com/hn46/QE-Automators/wiki/Resources) to get resources to learn about QE simulation.__  
