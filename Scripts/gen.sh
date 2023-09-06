@@ -3,6 +3,7 @@
 NPP=-1          #use -1 for no mpi
 
 #======================SWITCHES=====================================================
+CRE_VC_RLX=1                # 1 TO ENABLE, 0 TO DISABLE
 CRE_RLX=1                   # 1 TO ENABLE, 0 TO DISABLE
 CRE_SCF=1                   # 1 TO ENABLE, 0 TO DISABLE
 CRE_BAND_NSCF=1             # 1 TO ENABLE, 0 TO DISABLE
@@ -920,6 +921,71 @@ else
 cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
 mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.relax.in > \$D_OUT/\$F_PREFIX.relax.out;
 echo "RELAX Completed";
+date
+EOF
+fi
+fi
+
+#VC-RELAX file creation
+if [ $CRE_VC_RLX == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.vc-relax.in
+cat > $PWD/$D_PREF/$PREFIX.vc-relax.in <<EOF
+&CONTROL
+    calculation   = "vc-relax"
+    outdir        = "$D_INN/work/"
+    prefix        = "$PREFIX"
+    pseudo_dir    = "$D_PSEUDO"
+    restart_mode  = "from_scratch"
+    verbosity     = 'high'
+    nstep         =  500
+/
+
+&SYSTEM
+    ibrav       =  4
+    a           =  $A
+    c           =  $C
+    nat         =  $NAT
+    ntyp        =  $NTYP
+    input_dft   = 'PBE'
+    ecutwfc     =  $ECUTW
+    ecutrho     =  $ECUTRHO
+    occupations = 'smearing'
+    smearing    = 'mp'
+    degauss     =  0.005
+    vdw_corr    = 'DFT-D'
+/
+
+&ELECTRONS
+    conv_thr         =  1.00000e-8
+    mixing_beta      =  0.7
+/
+
+&IONS
+
+/
+
+&CELL
+    cell_dofree = '2Dxy'
+/
+
+ATOMIC_SPECIES
+$ATOM_SPE
+ATOMIC_POSITIONS ($COORDINATE_TYPE)
+$ATOM_POS
+K_POINTS {automatic}
+$K_SCF
+
+EOF
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
+\$D_QE/pw.x -i \$D_IN/\$F_PREFIX.vc-relax.in > \$D_OUT/\$F_PREFIX.vc-relax.out;
+echo "VC-RELAX Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
+mpirun -np \$NP \$D_QE/pw.x -i \$D_IN/\$F_PREFIX.vc-relax.in > \$D_OUT/\$F_PREFIX.vc-relax.out;
+echo "VC-RELAX Completed";
 date
 EOF
 fi
