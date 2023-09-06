@@ -13,6 +13,7 @@ CRE_PROJWFC=1               # 1 TO ENABLE, 0 TO DISABLE
 CRE_PP_SCF=1                # 1 TO ENABLE, 0 TO DISABLE
 CRE_PP=1                    # 1 TO ENABLE, 0 TO DISABLE
 CRE_VB_CB=1                 # 1 TO ENABLE, 0 TO DISABLE
+CRE_PH=1                    # 1 TO ENABLE, 0 TO DISABLE
 #======================INPUT SIDE===================================================
 PREFIX="graphene+silicene"
 D_PREF="structure_1"
@@ -120,6 +121,20 @@ KBAND_VB=14
 KBAND_CB=15
 KPOINT_VB=5
 KPOINT_CB=9
+
+# FOR PHONON ONLY
+
+NQ1=4
+NQ2=4
+NQ3=1
+
+Q_POINTS="\
+4
+ 0.00000    0.00000    0.00000   20
+ 0.00000    0.50000    0.00000   20
+ 0.33333    0.33333    0.00000   20
+ 0.00000    0.00000    0.00000   20
+"
 
 #======================END OF INPUT SIDE============================================
 #======================PROGRAM SIDE=================================================
@@ -759,6 +774,95 @@ date
 EOF
 fi
 fi
+
+
+#=======================PHONON DISPERSION=========================================================
+if [ $CRE_PH == 1 ];then
+touch $PWD/$D_PREF/$PREFIX.ph.disp.in
+cat > $PWD/$D_PREF/$PREFIX.ph.disp.in <<EOF
+&inputph
+    prefix      = '$PREFIX'
+    verbosity   = 'high'
+    outdir      = '$D_INN/work/'
+    fildyn      = '$D_INN/OUT/$PREFIX.disp.dyn'
+    tr2_ph      =  1.0d-14
+    ldisp       = .true.
+    nq1         =  $NQ1
+    nq2         =  $NQ2
+    nq3         =  $NQ3
+/
+EOF
+
+touch $PWD/$D_PREF/$PREFIX.q2r.in
+cat > $PWD/$D_PREF/$PREFIX.q2r.in <<EOF
+&input
+    zasr    = 'simple'
+    fildyn  = '$D_INN/OUT/$PREFIX.disp.dyn'
+    flfrc   = '$D_INN/OUT/$PREFIX.fc'
+!    loto_2d = .true.
+/
+EOF
+
+
+touch $PWD/$D_PREF/$PREFIX.matdyn.in
+cat > $PWD/$D_PREF/$PREFIX.matdyn.in <<EOF
+&input
+    asr     = 'simple'
+    flfrc   = '$D_INN/OUT/$PREFIX.fc'
+    flfrq   = '$D_INN/OUT/$PREFIX.freq'
+    q_in_band_form   = .true.
+    q_in_cryst_coord = .true.
+!    loto_2d = .true.
+/
+$Q_POINTS
+
+EOF
+touch $PWD/$D_PREF/$PREFIX.plotband.in
+cat > $PWD/$D_PREF/$PREFIX.plotband.in <<EOF
+$D_INN/OUT/$PREFIX.freq
+-100 2000
+$D_INN/OUT/$PREFIX.freq.disp.plot
+$D_INN/OUT/$PREFIX.freq.disp.ps
+0.0
+50.0 0.0
+
+EOF
+
+if [ $NPP == -1 ];then
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
+\$D_QE/ph.x -i \$D_IN/\$F_PREFIX.ph.disp.in > \$D_OUT/\$F_PREFIX.ph.disp.out;
+echo "PHONON Completed";
+date
+\$D_QE/q2r.x -i \$D_IN/\$F_PREFIX.q2r.in > \$D_OUT/\$F_PREFIX.q2r.out;
+echo "Q2R Completed";
+date
+\$D_QE/matdyn.x -i \$D_IN/\$F_PREFIX.matdyn.in > \$D_OUT/\$F_PREFIX.matdyn.out;
+echo "MATDYN Completed";
+date
+\$D_QE/plotband.x < \$D_IN/\$F_PREFIX.plotband.in > \$D_OUT/\$F_PREFIX.plotband.out;
+echo "PLOT Completed";
+date
+EOF
+else
+cat >> $PWD/$D_PREF/$PREFIX.sh << EOF
+mpirun -np \$NP \$D_QE/ph.x -i \$D_IN/\$F_PREFIX.ph.disp.in > \$D_OUT/\$F_PREFIX.ph.disp.out;
+echo "PHONON Completed";
+date
+mpirun -np \$NP \$D_QE/q2r.x -i \$D_IN/\$F_PREFIX.q2r.in > \$D_OUT/\$F_PREFIX.q2r.out;
+echo "Q2R Completed";
+date
+\$D_QE/matdyn.x -i \$D_IN/\$F_PREFIX.matdyn.in > \$D_OUT/\$F_PREFIX.matdyn.out;
+echo "MATDYN Completed";
+date
+\$D_QE/plotband.x < \$D_IN/\$F_PREFIX.plotband.in > \$D_OUT/\$F_PREFIX.plotband.out;
+echo "PLOT Completed";
+date
+EOF
+fi
+
+fi
+
+
 
 #=======================RELAX=========================================================
 if [ $CRE_RLX == 1 ];then
