@@ -4,7 +4,7 @@ Scripts for automating the tasks while working with __Quantum Espresso (QE)__.
 With the help of these basic scripts you can automate your boring, robotic tasks of making input files, plotting etc. and so you will be able to focus more on brain-intensive tasks. There are other GUI apps, kind of similar to this but the main intension of making these scripts is __"Control"__. Everything of the scripts can be modified easily satisfying your needs and the code is very close to the actual input files of QE.  
 
 ## List of scripts
-* `gen.sh` is for generating input files for scf, band, DOS, PDOS, CDD, CD of VB and CB.
+* `gen.sh` is for generating input files for scf, band, DOS, PDOS, CDD, CD of VB and CB, phonon dispersion.
 * `plotting.sh` is for plotting band structure, DOS, PDOS for atoms and orbitals.
 * `mismatch_calc.sh` is for calculating lattice mismatch using lattice constant.
 * `scf_all_test_gen.sh` is for testing pseudopotential files for suitable values of K_POINT, ecutwfc, ecutrho.
